@@ -6,36 +6,27 @@
 <title>ALOS_ | AI Chatbot</title>
 
 <style>
-/* ===== Softer ChatGPT-Style UI ===== */
 :root {
     --bg: #eef3ff;
     --container-bg: #f7f9ff;
     --panel: #eef2ff;
     --text: #0f172a;
-
     --user-msg: #2563eb;
     --user-text: #ffffff;
-
     --bot-msg: #ffffff;
     --border: rgba(15,23,42,0.08);
 }
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
     background: linear-gradient(180deg, #eef3ff, #ffffff);
-    color: var(--text);
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-family: system-ui, -apple-system, Segoe UI, sans-serif;
     display: flex;
     justify-content: center;
     height: 100vh;
 }
 
-/* Container */
 .container {
     width: 60%;
     display: flex;
@@ -44,58 +35,57 @@ body {
     background: var(--container-bg);
 }
 
-@media (max-width: 768px) {
-    .container { width: 100%; }
-}
+@media (max-width: 768px) { .container { width: 100%; } }
 
-/* Header */
 header {
-    padding: 16px;
-    font-size: 1.1rem;
+    padding: 14px;
     font-weight: 700;
-    letter-spacing: 1px;
-    border-bottom: 1px solid var(--border);
     text-align: center;
+    border-bottom: 1px solid var(--border);
 }
 
-/* Chat Area */
 #chat-window {
     flex: 1;
-    padding: 24px;
+    padding: 22px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 22px;
+    gap: 18px;
 }
 
-/* Messages */
 .message {
     max-width: 75%;
-    padding: 16px 18px;
+    padding: 14px 16px;
     border-radius: 14px;
     font-size: 0.95rem;
-    line-height: 1.65;
+    line-height: 1.7;
+    white-space: normal;
 }
 
-/* User */
 .user-message {
     align-self: flex-end;
     background: var(--user-msg);
     color: var(--user-text);
-    border-bottom-right-radius: 6px;
 }
 
-/* Bot */
 .bot-message {
     align-self: flex-start;
     background: var(--bot-msg);
     border: 1px solid var(--border);
-    color: var(--text);
-    border-bottom-left-radius: 6px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
-/* Yellow headings */
+/* Markdown-like formatting */
+.bot-message p { margin-bottom: 10px; }
+
+.bot-message ul {
+    padding-left: 18px;
+    margin: 8px 0;
+}
+
+.bot-message li {
+    margin-bottom: 6px;
+}
+
 .ai-heading {
     color: #facc15;
     font-weight: 700;
@@ -103,50 +93,41 @@ header {
     margin: 12px 0 6px;
 }
 
-/* Input */
+/* Input areas */
 .input-container {
     border-top: 1px solid var(--border);
-    padding: 16px;
     background: var(--panel);
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 textarea {
     width: 100%;
-    background: #ffffff;
+    padding: 12px;
+    border-radius: 10px;
     border: 1px solid var(--border);
-    color: var(--text);
-    padding: 14px;
-    border-radius: 12px;
     resize: none;
-    outline: none;
-    font-size: 0.95rem;
-}
-
-textarea::placeholder {
-    color: #64748b;
+    font-size: 0.9rem;
 }
 
 button {
-    margin-top: 10px;
-    background: #2563eb;
-    color: white;
-    border: none;
-    padding: 12px;
-    border-radius: 12px;
-    font-weight: 700;
-    cursor: pointer;
-}
-
-button:disabled {
-    opacity: 0.6;
-}
-
-/* Footer */
-footer {
-    font-size: 0.6rem;
-    text-align: center;
     padding: 10px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.send { background: #2563eb; color: white; }
+.stop { background: #ef4444; color: white; }
+
+footer {
+    text-align: center;
+    font-size: 0.6rem;
     opacity: 0.4;
+    padding: 8px;
 }
 </style>
 </head>
@@ -154,99 +135,122 @@ footer {
 <body>
 
 <div class="container">
-    <header>ALOS<span class="cursor">_</span></header>
+<header>ALOS_</header>
 
-    <div id="chat-window">
-        <div class="message bot-message">
-            <span class="ai-heading">Welcome</span>
-            I am ALOS_. How can I assist you?
-        </div>
+<div id="chat-window"></div>
+
+<div class="input-container">
+    <!-- CUSTOM PROMPT -->
+    <textarea id="systemPrompt" rows="2"
+      placeholder="Custom system prompt (saved locally)"></textarea>
+
+    <!-- USER INPUT -->
+    <textarea id="userInput" rows="2"
+      placeholder="Enter message..."></textarea>
+
+    <div style="display:flex; gap:8px;">
+        <button class="send" id="sendBtn">Send</button>
+        <button class="stop" id="stopBtn">Terminate</button>
     </div>
+</div>
 
-    <div class="input-container">
-        <textarea id="userInput" rows="2" placeholder="Enter custom prompt here..."></textarea>
-        <button id="sendBtn">Send Message</button>
-    </div>
-
-    <footer>FIREBASE | GEMINI AI</footer>
+<footer>LOCAL STORAGE | GEMINI AI</footer>
 </div>
 
 <script>
-/* CONFIG */
 const API_KEY = "AIzaSyAO0OfW34GELdDk1yjO3HDMFOzaPEQjNoI";
 const MODEL = "gemini-2.5-flash";
 
 const chatWindow = document.getElementById("chat-window");
 const userInput = document.getElementById("userInput");
+const systemPromptInput = document.getElementById("systemPrompt");
 const sendBtn = document.getElementById("sendBtn");
+const stopBtn = document.getElementById("stopBtn");
 
-/* Format AI text */
-function formatAIText(text) {
-    text = text.replace(/([a-z])([A-Z])/g, "$1 $2");
+let controller = null;
+
+/* ---------- LOCAL STORAGE ---------- */
+systemPromptInput.value = localStorage.getItem("systemPrompt") || "";
+
+let history = JSON.parse(localStorage.getItem("chatHistory") || "[]");
+history.forEach(m => addMessage(m.text, m.role, false));
+
+systemPromptInput.addEventListener("input", () => {
+    localStorage.setItem("systemPrompt", systemPromptInput.value);
+});
+
+/* ---------- FORMATTING ---------- */
+function renderMarkdown(text) {
     text = text.replace(/\*\*(.*?)\*\*/g, '<span class="ai-heading">$1</span>');
-    text = text.replace(/^\* (.*)$/gm, "• $1");
-    text = text.replace(/\n+/g, "<br><br>");
-    return text;
+    text = text.replace(/^\* (.*)$/gm, '<li>$1</li>');
+    text = text.replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>');
+    text = text.replace(/\n{2,}/g, '</p><p>');
+    return `<p>${text}</p>`;
 }
 
-/* Add message */
-function addMessage(text, className) {
+/* ---------- UI ---------- */
+function addMessage(text, role, save = true) {
     const div = document.createElement("div");
-    div.className = `message ${className}`;
-    div.innerHTML = className === "bot-message" ? formatAIText(text) : text;
+    div.className = `message ${role === "user" ? "user-message" : "bot-message"}`;
+    div.innerHTML = role === "user" ? text : renderMarkdown(text);
     chatWindow.appendChild(div);
     chatWindow.scrollTop = chatWindow.scrollHeight;
+
+    if (save) {
+        history.push({ role, text });
+        localStorage.setItem("chatHistory", JSON.stringify(history));
+    }
     return div;
 }
 
-/* Typing effect with formatting */
-async function typeWriter(element, text) {
-    const formatted = formatAIText(text);
-    element.innerHTML = "";
-    for (let i = 0; i < formatted.length; i++) {
-        element.innerHTML += formatted.charAt(i);
-        chatWindow.scrollTop = chatWindow.scrollHeight;
-        await new Promise(res => setTimeout(res, 10));
-    }
-}
-
-/* Send message */
+/* ---------- SEND ---------- */
 async function sendMessage() {
     const text = userInput.value.trim();
     if (!text) return;
 
-    addMessage(text, "user-message");
+    addMessage(text, "user");
     userInput.value = "";
-    sendBtn.disabled = true;
-    sendBtn.innerText = "THINKING...";
 
-    const botBubble = addMessage("", "bot-message");
+    controller = new AbortController();
+    const botBubble = addMessage("...", "bot");
 
     try {
         const res = await fetch(
             `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`,
             {
                 method: "POST",
+                signal: controller.signal,
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    contents: [{ parts: [{ text }] }]
+                    contents: [
+                        { role: "user", parts: [{ text: systemPromptInput.value }] },
+                        ...history.map(h => ({
+                            role: h.role === "user" ? "user" : "model",
+                            parts: [{ text: h.text }]
+                        }))
+                    ]
                 })
             }
         );
 
         const data = await res.json();
-        const reply = data.candidates[0].content.parts[0].text;
-        await typeWriter(botBubble, reply);
+        botBubble.innerHTML = renderMarkdown(
+            data.candidates[0].content.parts[0].text
+        );
 
-    } catch (err) {
-        botBubble.innerText = "Error: " + err.message;
-    } finally {
-        sendBtn.disabled = false;
-        sendBtn.innerText = "Send Message";
+    } catch (e) {
+        botBubble.innerText = e.name === "AbortError"
+            ? "⛔ Generation terminated."
+            : "Error occurred.";
     }
 }
 
-/* Events */
+/* ---------- TERMINATE ---------- */
+stopBtn.addEventListener("click", () => {
+    if (controller) controller.abort();
+});
+
+/* ---------- EVENTS ---------- */
 sendBtn.addEventListener("click", sendMessage);
 userInput.addEventListener("keydown", e => {
     if (e.key === "Enter" && !e.shiftKey) {
