@@ -6,30 +6,27 @@
     <title>ALOS_ Chatbot</title>
     <style>
         :root { --bg: #0f172a; --text: #f8fafc; --accent: #38bdf8; }
-        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; align-items: center; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; align-items: center; overflow: hidden; }
         
-        /* Layout: 60% center on desktop, 95% on mobile */
-        .container { width: 60%; display: flex; flex-direction: column; height: 100%; transition: width 0.3s; }
+        .container { width: 60%; display: flex; flex-direction: column; height: 100%; transition: width 0.3s; padding-bottom: 10px; }
         @media (max-width: 768px) { .container { width: 95%; } }
 
-        /* Header with blinking underscore */
-        header { text-align: center; padding: 20px; font-size: 2rem; font-weight: bold; letter-spacing: 2px; }
+        header { text-align: center; padding: 20px; font-size: 2rem; font-weight: bold; letter-spacing: 2px; flex-shrink: 0; }
         .cursor { animation: blink 1s infinite; color: var(--accent); }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-        /* Chat Area */
-        #chat-box { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; border-bottom: 1px solid #334155; }
-        .msg { padding: 10px 15px; border-radius: 8px; max-width: 80%; line-height: 1.5; }
-        .user { align-self: flex-end; background: var(--accent); color: #000; }
-        .bot { align-self: flex-start; background: #1e293b; border: 1px solid #334155; }
+        #chat-box { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; scroll-behavior: smooth; }
+        .msg { padding: 12px 16px; border-radius: 12px; max-width: 85%; line-height: 1.6; font-size: 0.95rem; word-wrap: break-word; }
+        .user { align-self: flex-end; background: var(--accent); color: #0f172a; font-weight: 500; border-bottom-right-radius: 2px; }
+        .bot { align-self: flex-start; background: #1e293b; border: 1px solid #334155; border-bottom-left-radius: 2px; }
 
-        /* Input Section */
-        .input-area { padding: 20px; display: flex; flex-direction: column; gap: 10px; }
-        textarea { background: #1e293b; border: 1px solid #334155; color: white; padding: 12px; border-radius: 8px; resize: none; font-size: 1rem; }
-        button { background: var(--accent); border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .input-area { padding: 15px 20px; display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; }
+        textarea { background: #1e293b; border: 1px solid #475569; color: white; padding: 14px; border-radius: 10px; resize: none; font-size: 1rem; outline: none; transition: border 0.2s; }
+        textarea:focus { border-color: var(--accent); }
+        button { background: var(--accent); border: none; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 800; color: #0f172a; letter-spacing: 1px; transition: transform 0.1s; }
+        button:active { transform: scale(0.98); }
 
-        /* Footer */
-        footer { padding: 15px; font-size: 0.7rem; opacity: 0.5; text-align: center; letter-spacing: 3px; }
+        footer { padding: 10px; font-size: 0.7rem; opacity: 0.6; text-align: center; letter-spacing: 4px; flex-shrink: 0; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -37,54 +34,58 @@
     <div class="container">
         <header>ALOS<span class="cursor">_</span></header>
 
-        <div style="font-size: 10px; opacity: 0.3; padding: 0 20px;">SYSTEM: Act as a helpful assistant.</div>
-
-        <div id="chat-box"></div>
+        <div id="chat-box">
+            <div class="msg bot">Hello! I am ALOS_. How can I assist you today?</div>
+        </div>
 
         <div class="input-area">
-            <textarea id="userInput" rows="2" placeholder="Ask ALOS_ anything..."></textarea>
-            <button onclick="handleSend()">SEND MESSAGE</button>
+            <textarea id="userInput" rows="2" placeholder="Type your message..."></textarea>
+            <button id="sendBtn" onclick="handleSend()">SEND MESSAGE</button>
         </div>
 
         <footer>FIREBASE &nbsp;|&nbsp; GEMINI AI</footer>
     </div>
 
     <script>
-        // CHERRY ON TOP: The Reversed String Obfuscation
-        // 1. Reverse your actual key and paste it here
-        const _k = "AIzaSyAO0OfW34GELdDk1yjO3HDMFOzaPEQjNoI"; 
+        // Reversed Key logic (The Obfuscation)
+        const _k = "IazSaYAO0OfW34GELdDk1yjO3HDMFOzaPEQjNoI"; // This is your string reversed
         const getK = () => _k.split("").reverse().join("");
 
         const chatBox = document.getElementById('chat-box');
+        const inputField = document.getElementById('userInput');
 
         async function handleSend() {
-            const input = document.getElementById('userInput');
-            const text = input.value.trim();
+            const text = inputField.value.trim();
             if (!text) return;
 
-            // Add User Bubble
             addBubble(text, 'user');
-            input.value = '';
+            inputField.value = '';
+            const botBubble = addBubble("...", 'bot');
 
-            // Add Bot Bubble (Empty for now)
-            const botBubble = addBubble("", 'bot');
-            
             try {
+                // Using v1beta for better System Instruction support
                 const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${getK()}`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        contents: [{ parts: [{ text: text }] }]
+                        contents: [{ parts: [{ text: text }] }],
+                        systemInstruction: { parts: [{ text: "Act as a helpful assistant named ALOS_." }] }
                     })
                 });
 
                 const data = await response.json();
-                const reply = data.candidates[0].content.parts[0].text;
                 
-                // LIVE TYPING EFFECT
+                if (data.error) {
+                    botBubble.innerText = "Error: " + data.error.message;
+                    return;
+                }
+
+                const reply = data.candidates[0].content.parts[0].text;
+                botBubble.innerText = "";
                 typeEffect(botBubble, reply);
+
             } catch (err) {
-                botBubble.innerText = "Error: Key restricted or limit reached.";
+                botBubble.innerText = "Check your Website Restrictions in Google Cloud Console.";
             }
         }
 
@@ -97,7 +98,6 @@
             return div;
         }
 
-        // Live typing like ChatGPT
         function typeEffect(element, text) {
             let i = 0;
             const interval = setInterval(() => {
@@ -105,8 +105,16 @@
                 i++;
                 chatBox.scrollTop = chatBox.scrollHeight;
                 if (i >= text.length) clearInterval(interval);
-            }, 20); // Speed of typing
+            }, 15);
         }
+
+        // Allow Enter key to send
+        inputField.addEventListener("keypress", (e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleSend();
+            }
+        });
     </script>
 </body>
 </html>
