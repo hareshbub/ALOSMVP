@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALOS - Subscription</title>
+
+<style>
+:root{
+  --yellow:#FFD700;
+  --card:#0b0b0b;
+  --border:rgba(255,215,0,0.3);
+  --text:#eaeaea;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+
+body{
+  font-family:Segoe UI,Roboto,sans-serif;
+  background:radial-gradient(circle at top,#0a3d62 0%,#000814 70%);
+  color:var(--text);
+  min-height:100vh;
+}
+
+/* ALOS top-left */
+header{
+  position:absolute;
+  top:0;
+  left:0;
+  padding:15px 20px;
+}
+
+.logo{
+  font-weight:900;
+  font-size:2.7rem;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--yellow);
+}
+
+/* Layout */
+.container{
+  max-width:1200px;
+  margin:auto;
+  padding:140px 20px 80px;
+}
+
+.section-wrapper{
+  margin-bottom:70px;
+}
+
+.section-label{
+  text-align:center;
+  color:var(--yellow);
+  font-size:1.7rem;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  margin-bottom:35px;
+}
+
+/* Grid */
+.grid-row{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:25px;
+}
+
+/* Cards */
+.plan-card{
+  background:var(--card);
+  border:2px solid var(--border);
+  border-radius:18px;
+  padding:25px;
+}
+
+.plan-name{
+  font-size:2rem;
+  color:var(--yellow);
+  font-weight:800;
+  text-transform:uppercase;
+  margin-bottom:8px;
+}
+
+.plan-summary{
+  font-size:1.05rem;
+  margin-bottom:15px;
+  opacity:.9;
+}
+
+.details-content{
+  border-top:1px solid var(--border);
+  padding-top:15px;
+}
+
+.feature-list{
+  list-style:none;
+}
+
+.feature-list li{
+  margin-bottom:12px;
+  font-size:1.05rem;
+  display:flex;
+}
+
+.feature-list li::before{
+  content:"➤";
+  color:var(--yellow);
+  margin-right:12px;
+}
+
+/* Mobile */
+@media(max-width:900px){
+  .grid-row{
+    grid-template-columns:1fr;
+  }
+  .section-label{font-size:1.5rem;}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">ALOS</div>
+</header>
+
+<div class="container">
+
+  <!-- Students -->
+  <div class="section-wrapper">
+    <div class="section-label">Students</div>
+    <div class="grid-row">
+
+      <div class="plan-card">
+        <div class="plan-name">Basic</div>
+        <div class="plan-summary">Basic AI Advisor</div>
+        <div class="details-content">
+          <ul class="feature-list">
+            <li>Access to Basic AI Models</li>
+            <li>Standard Response Time</li>
+            <li>Community Support Forum</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="plan-card">
+        <div class="plan-name">Gold</div>
+        <div class="plan-summary">Pro AI Advisor</div>
+        <div class="details-content">
+          <ul class="feature-list">
+            <li>Pro AI Models</li>
+            <li>Code Snippet Generation</li>
+            <li>Priority Processing</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="plan-card">
+        <div class="plan-name">Premium</div>
+        <div class="plan-summary">Full AI & Support</div>
+        <div class="details-content">
+          <ul class="feature-list">
+            <li>Unlimited Model Access</li>
+            <li>1-on-1 Advisor Support</li>
+            <li>Architecture Review Sessions</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Enterprise -->
+  <div class="section-wrapper">
+    <div class="section-label">Enterprise</div>
+    <div class="grid-row">
+
+      <div class="plan-card">
+        <div class="plan-name">Basic</div>
+        <div class="plan-summary">Small Team Access</div>
+        <div class="details-content">
+          <ul class="feature-list">
+            <li>Team Management Dashboard</li>
+            <li>Centralized Billing</li>
+            <li>Standard SLA</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="plan-card">
+        <div class="plan-name">Gold</div>
+        <div class="plan-summary">Networked AI</div>
+        <div class="details-content">
+          <ul class="feature-list">
+            <li>Cross-Department Intelligence</li>
+            <li>Advanced Security</li>
+            <li>Compliance Ready</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="plan-card">
+        <div class="plan-name">Contract</div>
+        <div class="plan-summary">Custom Solutions</div>
+        <div class="details-content">
+          <ul class="feature-list">
+            <li>Custom Model Training</li>
+            <li>On-Prem Deployment</li>
+            <li>Dedicated Account Manager</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
