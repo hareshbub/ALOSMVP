@@ -8,58 +8,40 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@500;600&display=swap" rel="stylesheet">
 
 <style>
-/* Reset and Base Styles */
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
+*{margin:0;padding:0;box-sizing:border-box}
 
 body{
   height:100vh;
-  background-color: #0a0a0a; 
+  background:#0a0a0a;
   color:#fff;
   display:flex;
   align-items:center;
   justify-content:center;
-  position:relative;
-  overflow: hidden;
+  overflow:hidden;
 }
 
-/* BACKGROUND LAYER: The gra.html file */
-#background-layer {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  border: none;
-  z-index: -1; /* Places it behind all content */
-  pointer-events: none; /* Allows clicks to pass through to buttons if needed */
+#background-layer{
+  position:fixed;
+  inset:0;
+  width:100vw;
+  height:100vh;
+  border:none;
+  z-index:-1;
+  pointer-events:none;
 }
 
-/* UI Content Container */
-.content-wrapper {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-}
+.content-wrapper{position:relative;width:100%;height:100%;}
 
-/* ALOS Title */
 .alos{
   position:absolute;
-  top:18px;
-  left:18px;
-  font-family:"Archivo Black", sans-serif;
+  top:18px;left:18px;
+  font-family:"Archivo Black";
   font-size:2.3rem;
 }
 
-/* CENTER CONTAINER */
 .center{
   position:absolute;
-  top:50%;
-  left:50%;
+  top:50%;left:50%;
   transform:translate(-50%,-50%);
   width:100%;
   max-width:900px;
@@ -69,118 +51,136 @@ body{
   align-items:center;
 }
 
-/* MAIN TYPING TEXT */
 .typing-text{
-  font-family:"Archivo Black", sans-serif;
+  font-family:"Archivo Black";
   font-size:4rem;
   text-align:center;
-  line-height:1.15;
   margin-bottom:40px;
-  min-height: 4.6rem;
+  min-height:4.6rem;
 }
 
-.cursor{
-  display: inline-block;
-  width: 10px;
-  animation:blink 1s steps(2, start) infinite;
-}
+.cursor{animation:blink 1s steps(2,start) infinite}
+@keyframes blink{to{visibility:hidden}}
 
-@keyframes blink{
-  to { visibility: hidden; }
-}
-
-/* DYNAMIC ISLAND GLOWING BAR */
 .action-bar{
-  width:100%;
-  max-width:600px;
-  background: rgba(255, 255, 255, 0.95);
-  padding: 14px 30px;
-  border-radius: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.4), 
-              0 0 40px rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(4px);
+  max-width:600px;width:100%;
+  background:rgba(255,255,255,.95);
+  padding:14px 30px;
+  border-radius:50px;
+  display:flex;
+  justify-content:center;
+  cursor:pointer;
+  transition:.4s;
+  box-shadow:0 0 20px rgba(255,255,255,.4);
 }
 
-.action-bar:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 30px rgba(255, 255, 255, 0.6), 
-              0 0 60px rgba(255, 255, 255, 0.2);
+.action-bar:hover{transform:scale(1.05)}
+
+.action-text{
+  color:#000;
+  font-family:Inter;
+  font-size:1.05rem;
 }
 
-.action-text {
-  color: #000;
-  font-family: "Inter", sans-serif;
-  font-weight: 500;
-  font-size: 1.05rem;
-  text-transform: lowercase; 
-  letter-spacing: -0.2px;
-  text-shadow: 0 0 1px rgba(0,0,0,0.3);
-  filter: blur(0.4px); 
-}
-
-/* FOOTER */
 .footer{
   position:absolute;
-  bottom:88px; 
+  bottom:88px;
   width:100%;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  font-family:"Inter", sans-serif;
+  text-align:center;
+  font-family:Inter;
   font-size:.9rem;
-  font-weight:600;
   opacity:.8;
 }
 
-.footer-row{
-  display:flex;
-  align-items:center;
-  gap:14px;
-  margin-top:4px;
-}
+.footer-row{display:flex;justify-content:center;gap:14px;margin-top:6px}
+.footer img{width:14px}
 
-.footer img{ width:14px; height:14px; }
-
-/* Global buttons */
-.learn-more, .lang-switch {
+.top-actions{
   position:absolute;
-  bottom:18px;
-  font-family:"Inter", sans-serif;
-  border-radius:8px;
-  text-decoration:none;
+  top:18px;right:18px;
+  display:flex;
+  gap:10px;
 }
 
-.learn-more {
-  right:18px;
-  padding:8px 14px;
-  background:#111;
-  color:#fff;
-  font-size:.85rem;
-}
-
-.lang-switch {
-  left:18px;
-  width:44px;
-  height:44px;
+/* TOP BUTTONS — WHITE */
+.top-btn{
   background:#fff;
   color:#000;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:.9rem;
-  font-weight:700;
+  padding:8px 14px;
+  border-radius:8px;
+  font-family:Inter;
+  font-size:.85rem;
+  text-decoration:none;
   cursor:pointer;
 }
 
-/* MOBILE RESPONSIVENESS */
+/* LEARN MORE — BOTTOM RIGHT */
+.learn-more{
+  position:absolute;
+  bottom:18px;
+  right:18px;
+  background:#111;
+  color:#fff;
+  padding:8px 14px;
+  border-radius:8px;
+  font-family:Inter;
+  font-size:.85rem;
+  text-decoration:none;
+}
+
+.lang-switch{
+  position:absolute;
+  bottom:18px;left:18px;
+  width:44px;height:44px;
+  background:#fff;color:#000;
+  border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;cursor:pointer;
+}
+
+/* LOGIN MODAL */
+.login-modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:99;
+}
+
+.login-box{
+  background:#111;
+  width:90%;
+  max-width:360px;
+  border-radius:14px;
+  padding:24px;
+  font-family:Inter;
+}
+
+.login-box h2{text-align:center;margin-bottom:18px}
+
+.login-box input{
+  width:100%;
+  padding:12px;
+  margin-bottom:12px;
+  border-radius:8px;
+  border:none;
+  outline:none;
+}
+
+.login-box button{
+  width:100%;
+  padding:12px;
+  border-radius:8px;
+  border:none;
+  background:#fff;
+  color:#000;
+  font-weight:600;
+}
+
 @media(max-width:600px){
-  .typing-text{font-size:2.2rem;}
-  .action-text{font-size: 0.9rem;}
+  .typing-text{font-size:2.2rem}
 }
 </style>
 </head>
@@ -190,97 +190,84 @@ body{
 <iframe src="gra.html" id="background-layer"></iframe>
 
 <div class="content-wrapper">
-    <div class="alos" id="alosText"></div>
+  <div class="alos" id="alosText"></div>
 
-    <div class="center">
-      <div class="typing-text" id="mainText"></div>
+  <div class="top-actions">
+    <div class="top-btn" onclick="openLogin()">Log In</div>
+    <a href="plans.html" class="top-btn">Plans</a>
+  </div>
 
-      <div class="action-bar" onclick="location.href='sub.html'">
-        <span class="action-text" id="barText"></span>
-      </div>
+  <div class="center">
+    <div class="typing-text" id="mainText"></div>
+    <div class="action-bar" onclick="location.href='sub.html'">
+      <span class="action-text" id="barText"></span>
     </div>
+  </div>
 
-    <div class="footer">
-      <div id="poweredTitle"></div>
-      <div class="footer-row">
-        <img src="https://www.google.com/s2/favicons?domain=google.com">
-        <span id="geminiText"></span>
-        <img src="https://www.google.com/s2/favicons?domain=firebase.google.com">
-        <span id="firebaseText"></span>
-      </div>
-      <div style="margin-top:6px" id="doneTitle"></div>
-      <div class="footer-row" id="doneNames"></div>
+  <div class="footer">
+    <div id="poweredTitle"></div>
+    <div class="footer-row">
+      <img src="https://www.google.com/s2/favicons?domain=google.com">
+      <span id="geminiText"></span>
+      <img src="https://www.google.com/s2/favicons?domain=firebase.google.com">
+      <span id="firebaseText"></span>
     </div>
+    <div id="doneTitle" style="margin-top:6px"></div>
+    <div id="doneNames"></div>
+  </div>
 
-    <a class="learn-more" id="learnMore" href="lal.ppt"></a>
-    <div class="lang-switch" id="langBtn" onclick="toggleLang()">EN</div>
+  <a class="learn-more" id="learnMore" href="lal.ppt"></a>
+  <div class="lang-switch" id="langBtn" onclick="toggleLang()">EN</div>
+</div>
+
+<div class="login-modal" id="loginModal" onclick="closeLogin(event)">
+  <div class="login-box">
+    <h2>Welcome back</h2>
+    <input placeholder="Email">
+    <input type="password" placeholder="Password">
+    <button>Continue</button>
+  </div>
 </div>
 
 <script>
-const content = {
-  EN:{
-    alos:"ALOS",
-    main:"YOUR BACKEND SERVICE ADVISOR",
-    learn:"Learn More",
-    powered:"POWERED BY",
-    gemini:"Gemini AI",
-    firebase:"Firebase",
-    done:"DONE BY",
-    names:"Haresh G | Santhoshraj N | Vertiselvan N",
-    bar: "click here to know your best backend process"
-  },
-  TA:{
-    alos:"ஆலோஸ்",
-    main:"உங்கள் பின்னணி சேவை ஆலோசகர்",
-    learn:"மேலும் அறிக",
-    powered:"ஆல் இயக்கப்படுகிறது",
-    gemini:"ஜெமினி ஏஐ",
-    firebase:"ஃபயர்பேஸ்",
-    done:"உருவாக்கம்",
-    names:"ஜி ஹரேஷ் · நா சந்தோஷ்ராஜ் · அ வெற்றிசெல்வன்",
-    bar: "உங்கள் சிறந்த பின்னணி செயல்முறையை அறிய இங்கே கிளிக் செய்க"
-  }
+const content={
+EN:{alos:"ALOS",main:"YOUR BACKEND SERVICE ADVISOR",learn:"Learn More",powered:"POWERED BY",gemini:"Gemini AI",firebase:"Firebase",done:"DONE BY",names:"Haresh G | Santhoshraj N | Vertiselvan N",bar:"click here to know your best backend process"},
+TA:{alos:"ஆலோஸ்",main:"உங்கள் பின்னணி சேவை ஆலோசகர்",learn:"மேலும் அறிக",powered:"ஆல் இயக்கப்படுகிறது",gemini:"ஜெமினி ஏஐ",firebase:"ஃபயர்பேஸ்",done:"உருவாக்கம்",names:"ஜி ஹரேஷ் · நா சந்தோஷ்ராஜ் · அ வெற்றிசெல்வன்",bar:"உங்கள் சிறந்த பின்னணி செயல்முறையை அறிய இங்கே கிளிக் செய்க"}
 };
 
-let lang="EN";
-let typingTimer;
+let lang="EN",timer;
 
-function typeText(el, text) {
-  clearInterval(typingTimer);
-  el.innerHTML = ""; 
-  let i = 0;
-  typingTimer = setInterval(() => {
-    if (i < text.length) {
-      el.textContent = text.substring(0, i + 1);
-      i++;
-    } else {
-      clearInterval(typingTimer);
-      el.innerHTML = text + `<span class="cursor">_</span>`;
-    }
-  }, 70);
+function typeText(el,t){
+  clearInterval(timer);el.textContent="";let i=0;
+  timer=setInterval(()=>{
+    i<t.length?el.textContent=t.slice(0,++i):(clearInterval(timer),el.innerHTML=t+'<span class="cursor">_</span>')
+  },70);
 }
 
 function update(){
-  document.getElementById("alosText").innerHTML = content[lang].alos+`<span class="cursor">_</span>`;
-  document.getElementById("learnMore").textContent = content[lang].learn;
-  document.getElementById("poweredTitle").textContent = content[lang].powered;
-  document.getElementById("geminiText").textContent = content[lang].gemini;
-  document.getElementById("firebaseText").textContent = content[lang].firebase;
-  document.getElementById("doneTitle").textContent = content[lang].done;
-  document.getElementById("doneNames").textContent = content[lang].names;
-  document.getElementById("barText").textContent = content[lang].bar;
-
-  typeText(document.getElementById("mainText"), content[lang].main);
+  alosText.innerHTML=content[lang].alos+'<span class="cursor">_</span>';
+  learnMore.textContent=content[lang].learn;
+  poweredTitle.textContent=content[lang].powered;
+  geminiText.textContent=content[lang].gemini;
+  firebaseText.textContent=content[lang].firebase;
+  doneTitle.textContent=content[lang].done;
+  doneNames.textContent=content[lang].names;
+  barText.textContent=content[lang].bar;
+  typeText(mainText,content[lang].main);
 }
 
 function toggleLang(){
-  lang = lang==="EN" ? "TA" : "EN";
-  document.getElementById("langBtn").textContent = lang==="EN" ? "EN" : "த";
+  lang=lang==="EN"?"TA":"EN";
+  langBtn.textContent=lang==="EN"?"EN":"த";
   update();
 }
+
+function openLogin(){loginModal.style.display="flex"}
+function closeLogin(e){if(e.target.id==="loginModal")loginModal.style.display="none"}
 
 update();
 </script>
 
 </body>
 </html>
+
